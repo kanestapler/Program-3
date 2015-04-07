@@ -32,6 +32,6 @@ public class ReaderWriterServer
       }
    }
 
-   private static final int NUM_OF_READERS = 3;
-   private static final int NUM_OF_WRITERS = 2;
+   private static final int NUM_OF_READERS = 16;
+   private static final int NUM_OF_WRITERS = 4;
 }
