@@ -18,6 +18,7 @@ public class Database
       readerCount = 0;
       dbReading = false;
       dbWriting = false;
+      unLocked = true;
    }
 
    // readers and writers will call this to nap
@@ -32,7 +33,7 @@ public class Database
    // reader will call this when they start reading
    public synchronized int startRead()
    { 
-      while (dbWriting == true)
+      while (dbWriting == true || unLocked == false)
       {
          try { wait(); }
          catch(InterruptedException e) {}
@@ -68,6 +69,7 @@ public class Database
    // writer will call this when they start writing
     public synchronized void startWrite()
    { 
+      unLocked = false;
       while (dbReading == true || dbWriting == true)
       {
          try { wait(); }
@@ -83,7 +85,7 @@ public class Database
    public synchronized void endWrite()
    { 
       dbWriting = false;
-
+      unLocked = true;
       notifyAll();
    }
 
@@ -93,7 +95,8 @@ public class Database
    // flags to indicate whether the database is
    // being read or written
    private boolean dbReading;
-   private boolean dbWriting; 
+   private boolean dbWriting;
+   private boolean unLocked;
     
    private static final int NAP_TIME = 5;
 }
